@@ -90,12 +90,29 @@ def count_directors(movies_data: list):
     return director_counter
 
 
+<<<<<<< HEAD
 def get_top_5_films_per_year(df: pd.DataFrame):
     # Ordena os filmes por ano e nota, e pega os 5 melhores por ano
     top_5_per_year = df.sort_values(by=['Ano', 'Nota'], ascending=[True, False])
     top_5_per_year = top_5_per_year.groupby('Ano').head(5)
 
     return top_5_per_year
+=======
+def get_decade(year: int):
+    # Extrai a década a partir do ano
+    return (year // 10) * 10
+
+
+def get_top_5_films_per_decade(df: pd.DataFrame):
+    # Cria uma nova coluna para a década
+    df['Década'] = df['Ano'].apply(get_decade)
+    
+    # Ordena os filmes por década e nota, e pega os 5 melhores por década
+    top_5_per_decade = df.sort_values(by=['Década', 'Nota'], ascending=[True, False])
+    top_5_per_decade = top_5_per_decade.groupby('Década').head(5)
+    
+    return top_5_per_decade
+>>>>>>> 3cd64239db95ffc41a23ee8617ba30054e073985
 
 
 def display_menu():
@@ -103,7 +120,11 @@ def display_menu():
     print("1 - Atores com mais participações nos filmes")
     print("2 - Diretores com mais participações nos filmes")
     print("3 - Filmes com maiores avaliações")
+<<<<<<< HEAD
     print("4 - Top 5 filmes por ano")
+=======
+    print("4 - Top 5 filmes por década")
+>>>>>>> 3cd64239db95ffc41a23ee8617ba30054e073985
     print("5 - Sair")
 
 
@@ -171,10 +192,17 @@ def main():
             print("\n")
 
         elif choice == '4':
+<<<<<<< HEAD
             # Mostrar o Top 5 filmes por ano
             top_5_films_per_year = get_top_5_films_per_year(df)
             print("Top 5 filmes por ano:")
             print(top_5_films_per_year[['Título', 'Ano', 'Nota']].to_string(index=False))
+=======
+             # Mostrar o Top 5 filmes por década
+            top_5_films_per_decade = get_top_5_films_per_decade(df)
+            print("Top 5 filmes por década:")
+            print(top_5_films_per_decade[['Título', 'Ano', 'Década', 'Nota']].to_string(index=False))
+>>>>>>> 3cd64239db95ffc41a23ee8617ba30054e073985
             print("\n")
 
         elif choice == '5':
