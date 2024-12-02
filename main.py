@@ -6,7 +6,6 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.service import Service as ChromeService
 from webdriver_manager.chrome import ChromeDriverManager
 import pandas as pd
-import matplotlib.pyplot as plt
 from collections import Counter
 
 
@@ -79,7 +78,6 @@ def count_actor(movies_data: list):
     return actor_counter
 
 
-
 def count_directors(movies_data: list):
     director_counter = Counter()
     for movie in movies_data:
@@ -133,9 +131,8 @@ def main():
         print("\n")
         print("------------------------------------------------------------------------")
 
-
         if choice == "1":
-        # Contar os atores mais aparecidos
+        # Contar os atores mais frequentes
             actor_counter = count_actor(movies)
             print("Atores com mais participações nos filmes:")
             for actor, count in actor_counter.most_common(10):  # Mostrar os 10 mais comuns
@@ -172,6 +169,7 @@ def main():
             # Opção inválida
             print("Opção inválida! Tente novamente.")
             print("\n\n")
+
 
 if __name__ == "__main__":
     main()
