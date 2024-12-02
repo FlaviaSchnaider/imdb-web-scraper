@@ -68,22 +68,35 @@ def prepare_data(data: list[list]):
     return result
 
 
-def count_actors(movies_data: list):
+def count_actor(movies_data: list):
     actor_counter = Counter()
     for movie in movies_data:
-        actors = movie[5]  
-        if actors:
-            actor_list = actors.split(";") 
+        actor = movie[6] 
+        if actor:
+            actor_list = actor.split(";")
             for actor in actor_list:
                 actor_counter[actor.strip()] += 1
-
     return actor_counter
+
+
+
+def count_directors(movies_data: list):
+    director_counter = Counter()
+    for movie in movies_data:
+        directors = movie[8] 
+        if directors:
+            director_list = directors.split(";")
+            for director in director_list:
+                director_counter[director.strip()] += 1
+
+    return director_counter
+
 
 def display_menu():
     print("Escolha uma opção:")
-    print("1 - Atores mais aparecidos nos filmes")
-    print("2 - Filmes com maiores avaliações")
-    print("3 - Recomendar filme com maior avaliação")
+    print("1 - Atores com mais participações nos filmes")
+    print("2 - Diretores com mais participações nos filmes")
+    print("3 - Filmes com maiores avaliações")
     print("4 - Sair")
 
 
@@ -118,36 +131,47 @@ def main():
         display_menu()
         choice = input("Escolha uma opção: ")
         print("\n")
+        print("------------------------------------------------------------------------")
+
 
         if choice == "1":
-            # Contar os atores mais aparecidos
-            actor_counter = count_actors(movies)
-            print("Atores mais aparecidos nos filmes:")
+        # Contar os atores mais aparecidos
+            actor_counter = count_actor(movies)
+            print("Atores com mais participações nos filmes:")
             for actor, count in actor_counter.most_common(10):  # Mostrar os 10 mais comuns
                 print(f"{actor}: {count} filmes")
-            print("\n\n")
-
+            print("\n")
 
         elif choice == "2":
-            # Mostrar o Top 10 filmes com maiores avaliações
-            print("Top 10 filmes com maiores avaliações:")
-            print(top_10_filmes[['Título', 'Nota']])
-            print("\n\n")
+            # Contar os diretores mais frequentes
+            count_directors = Counter()
+            for movie in movies:
+                directors = movie[5] 
+                if directors:
+                    director_list = directors.split(";")
+                    for director in director_list:
+                        count_directors[director.strip()] += 1
+            print("Diretores com mais participações nos filmes:")
+            for director, count in count_directors.most_common(10):
+                print(f"{director}: {count} filmes")
+            print("\n")
 
         elif choice == "3":
-            # Recomendação do melhor filme
-            best_movie = df.sort_values(by="Nota", ascending=False).iloc[0]
-            print(f"Recomendamos assistir: {best_movie['Título']} com a nota {best_movie['Nota']}")
-            print("\n\n")
+            # Mostrar o Top 10 filmes com maiores avaliações
+            print("Top 10 filmes com maiores avaliações:")
+            print(top_10_filmes[['Título', 'Nota']].to_string(index=False))
+            print("\n")
 
         elif choice == '4':
             # Sair do programa
-            print("Obrigado por participar!")
+            print("Obrigado por participar!!")
+            print("\n\n")
             break
 
         else:
             # Opção inválida
             print("Opção inválida! Tente novamente.")
+            print("\n\n")
 
 if __name__ == "__main__":
     main()
