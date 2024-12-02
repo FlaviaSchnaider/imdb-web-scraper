@@ -90,12 +90,29 @@ def count_directors(movies_data: list):
     return director_counter
 
 
+def get_decade(year: int):
+    # Extrai a década a partir do ano
+    return (year // 10) * 10
+
+
+def get_top_5_films_per_decade(df: pd.DataFrame):
+    # Cria uma nova coluna para a década
+    df['Década'] = df['Ano'].apply(get_decade)
+    
+    # Ordena os filmes por década e nota, e pega os 5 melhores por década
+    top_5_per_decade = df.sort_values(by=['Década', 'Nota'], ascending=[True, False])
+    top_5_per_decade = top_5_per_decade.groupby('Década').head(5)
+    
+    return top_5_per_decade
+
+
 def display_menu():
     print("Escolha uma opção:")
     print("1 - Atores com mais participações nos filmes")
     print("2 - Diretores com mais participações nos filmes")
     print("3 - Filmes com maiores avaliações")
-    print("4 - Sair")
+    print("4 - Top 5 filmes por década")
+    print("5 - Sair")
 
 
 def main():
@@ -160,6 +177,13 @@ def main():
             print("\n")
 
         elif choice == '4':
+             # Mostrar o Top 5 filmes por década
+            top_5_films_per_decade = get_top_5_films_per_decade(df)
+            print("Top 5 filmes por década:")
+            print(top_5_films_per_decade[['Título', 'Ano', 'Década', 'Nota']].to_string(index=False))
+            print("\n")
+
+        elif choice == '5':
             # Sair do programa
             print("Obrigado por participar!!")
             print("\n\n")
