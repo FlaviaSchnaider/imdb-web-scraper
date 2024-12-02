@@ -6,7 +6,6 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.service import Service as ChromeService
 from webdriver_manager.chrome import ChromeDriverManager
 import pandas as pd
-import matplotlib.pyplot as plt
 from collections import Counter
 
 
@@ -59,7 +58,7 @@ def prepare_data(data: list[list]):
             item[1],  # Ano
             item[2],  # Hora
             item[3] if len(item) < 14 else item[4],  # Nota
-            item[6] if len(item) < 14 else item[7],  # Descrição (ajustado, caso necessário)
+            item[6] if len(item) < 14 else item[7],  # Descrição 
             item[8] if len(item) < 14 else item[9],  # Diretor
             item[10] if len(item) > 14 else item[11] if len(item) > 11 else "",  # Ator
         ]
@@ -79,7 +78,6 @@ def count_actor(movies_data: list):
     return actor_counter
 
 
-
 def count_directors(movies_data: list):
     director_counter = Counter()
     for movie in movies_data:
@@ -92,12 +90,21 @@ def count_directors(movies_data: list):
     return director_counter
 
 
+def get_top_5_films_per_year(df: pd.DataFrame):
+    # Ordena os filmes por ano e nota, e pega os 5 melhores por ano
+    top_5_per_year = df.sort_values(by=['Ano', 'Nota'], ascending=[True, False])
+    top_5_per_year = top_5_per_year.groupby('Ano').head(5)
+
+    return top_5_per_year
+
+
 def display_menu():
     print("Escolha uma opção:")
     print("1 - Atores com mais participações nos filmes")
     print("2 - Diretores com mais participações nos filmes")
     print("3 - Filmes com maiores avaliações")
-    print("4 - Sair")
+    print("4 - Top 5 filmes por ano")
+    print("5 - Sair")
 
 
 def main():
@@ -126,6 +133,8 @@ def main():
     # Ordenar o DataFrame pela coluna 'Nota' e pegar os 10 primeiros
     top_10_filmes = df.sort_values(by='Nota', ascending=False).head(10)
 
+    df['Ano'] = pd.to_numeric(df['Ano'], errors='coerce')
+
     # Exibir o menu para o usuário
     while True:
         display_menu()
@@ -133,9 +142,8 @@ def main():
         print("\n")
         print("------------------------------------------------------------------------")
 
-
         if choice == "1":
-        # Contar os atores mais aparecidos
+        # Contar os atores mais frequentes
             actor_counter = count_actor(movies)
             print("Atores com mais participações nos filmes:")
             for actor, count in actor_counter.most_common(10):  # Mostrar os 10 mais comuns
@@ -163,6 +171,13 @@ def main():
             print("\n")
 
         elif choice == '4':
+            # Mostrar o Top 5 filmes por ano
+            top_5_films_per_year = get_top_5_films_per_year(df)
+            print("Top 5 filmes por ano:")
+            print(top_5_films_per_year[['Título', 'Ano', 'Nota']].to_string(index=False))
+            print("\n")
+
+        elif choice == '5':
             # Sair do programa
             print("Obrigado por participar!!")
             print("\n\n")
@@ -172,6 +187,7 @@ def main():
             # Opção inválida
             print("Opção inválida! Tente novamente.")
             print("\n\n")
+
 
 if __name__ == "__main__":
     main()
